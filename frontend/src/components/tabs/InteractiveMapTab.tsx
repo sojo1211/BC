@@ -296,15 +296,15 @@ export const InteractiveMapTab: React.FC<Props> = ({
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       {/* 1. 카테고리 목적 안내 배너 (초보자도 바로 이해하는 가이드) */}
-      <div className="bg-toss-blueLight/60 border border-toss-blue/20 p-5 rounded-3xl flex items-start gap-3.5">
-        <div className="w-9 h-9 rounded-2xl bg-toss-blue text-white flex items-center justify-center font-black text-base shrink-0 mt-0.5">
+      <div className="bg-toss-blueLight/60 border border-toss-blue/20 p-4 sm:p-5 rounded-2xl sm:rounded-3xl flex items-start gap-3 sm:gap-3.5">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl bg-toss-blue text-white flex items-center justify-center font-black text-sm sm:text-base shrink-0 mt-0.5">
           2
         </div>
         <div className="text-xs text-toss-text space-y-1">
           <strong className="text-sm font-extrabold text-toss-blue block">
             [러닝 지도] 야외활동 동선과 골목 매장을 지도로 잇는 공간입니다
           </strong>
-          <p className="text-toss-subtext leading-relaxed">
+          <p className="text-toss-subtext leading-relaxed text-[11px] sm:text-xs">
             서울시 하천이용시설 데이터(167개)와 거점 공원을 러닝 코스로 엮고,
             운동 후 바로 들를 수 있는 골목 소상공인(MyTag 가맹점)의 위치와 할인 혜택을 한눈에 확인하여
             <strong> '운동하러 왔다가 동네에서 결제하고 가는 흐름'</strong>을 시각화합니다.
@@ -314,33 +314,33 @@ export const InteractiveMapTab: React.FC<Props> = ({
 
       {/* 2. 토스 실시간 날씨 및 러닝 적합 지수 & 산정 기준 (지역별 실시간 연동 - 칸 완벽 정렬) */}
       {weather && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
           {/* 좌측: 실시간 자치구 기상 지표 (7 cols - 우측 카드와 1:1 높이 일치) */}
-          <div className="lg:col-span-7 toss-card p-6 flex flex-col justify-between h-full space-y-4">
+          <div className="lg:col-span-7 toss-card p-4 sm:p-6 flex flex-col justify-between h-full space-y-3 sm:space-y-4">
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-toss-border">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-toss-blueLight flex items-center justify-center text-toss-blue shrink-0">
-                    <Sun className="w-6 h-6 text-toss-yellow" />
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-toss-blueLight flex items-center justify-center text-toss-blue shrink-0">
+                    <Sun className="w-5 h-5 sm:w-6 sm:h-6 text-toss-yellow" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-extrabold text-toss-text">{selectedDistrict} 실시간 기상</h2>
-                      <span className="text-[11px] font-bold text-toss-green bg-toss-greenLight px-2 py-0.5 rounded-full">
+                      <h2 className="text-base sm:text-lg font-extrabold text-toss-text">{selectedDistrict} 실시간 기상</h2>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-toss-green bg-toss-greenLight px-2 py-0.5 rounded-full">
                         Open-Meteo 실시간
                       </span>
                     </div>
-                    <p className="text-xs text-toss-subtext mt-0.5">{weather.recommendation}</p>
+                    <p className="text-[11px] sm:text-xs text-toss-subtext mt-0.5">{weather.recommendation}</p>
                   </div>
                 </div>
 
                 {/* 러닝 적합 지수 점수 박스 */}
-                <div className="bg-toss-bg px-4 py-2.5 rounded-2xl flex items-center gap-3 self-start sm:self-center shrink-0">
+                <div className="bg-toss-bg px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl flex items-center gap-2.5 sm:gap-3 self-start sm:self-center shrink-0">
                   <div>
-                    <span className="text-[11px] font-medium text-toss-muted block">러닝 적합 지수</span>
-                    <span className="text-xl font-black text-toss-blue">{weather.running_score}점</span>
+                    <span className="text-[10px] sm:text-[11px] font-medium text-toss-muted block">러닝 적합 지수</span>
+                    <span className="text-lg sm:text-xl font-black text-toss-blue">{weather.running_score}점</span>
                   </div>
-                  <div className="w-16 bg-white h-2.5 rounded-full overflow-hidden border border-toss-border">
+                  <div className="w-14 sm:w-16 bg-white h-2.5 rounded-full overflow-hidden border border-toss-border">
                     <div
                       className="bg-toss-blue h-full rounded-full transition-all duration-500"
                       style={{ width: `${weather.running_score}%` }}
@@ -350,31 +350,31 @@ export const InteractiveMapTab: React.FC<Props> = ({
               </div>
 
               {/* 실시간 3대 관측 수치 */}
-              <div className="grid grid-cols-3 gap-3 text-xs mt-4">
-                <div className="bg-toss-bg p-3.5 rounded-2xl text-center border border-toss-border/40">
-                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-1">
-                    <Thermometer className="w-3.5 h-3.5 text-red-500" />
-                    <span>기온 (체감)</span>
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-3 text-xs mt-3 sm:mt-4">
+                <div className="bg-toss-bg p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center border border-toss-border/40">
+                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-0.5 sm:mb-1">
+                    <Thermometer className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-500" />
+                    <span className="text-[10px] sm:text-xs">기온 (체감)</span>
                   </div>
-                  <strong className="text-toss-text text-sm sm:text-base font-extrabold block">
+                  <strong className="text-toss-text text-xs sm:text-base font-extrabold block truncate">
                     {weather.temperature}°C ({weather.apparent_temperature}°C)
                   </strong>
                 </div>
-                <div className="bg-toss-bg p-3.5 rounded-2xl text-center border border-toss-border/40">
-                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-1">
-                    <Droplets className="w-3.5 h-3.5 text-toss-blue" />
-                    <span>상대습도</span>
+                <div className="bg-toss-bg p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center border border-toss-border/40">
+                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-0.5 sm:mb-1">
+                    <Droplets className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-toss-blue" />
+                    <span className="text-[10px] sm:text-xs">상대습도</span>
                   </div>
-                  <strong className="text-toss-text text-sm sm:text-base font-extrabold block">
+                  <strong className="text-toss-text text-xs sm:text-base font-extrabold block">
                     {weather.relative_humidity}%
                   </strong>
                 </div>
-                <div className="bg-toss-bg p-3.5 rounded-2xl text-center border border-toss-border/40">
-                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-1">
-                    <Wind className="w-3.5 h-3.5 text-toss-green" />
-                    <span>바람 속도</span>
+                <div className="bg-toss-bg p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-center border border-toss-border/40">
+                  <div className="flex items-center justify-center gap-1 text-toss-muted mb-0.5 sm:mb-1">
+                    <Wind className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-toss-green" />
+                    <span className="text-[10px] sm:text-xs">바람 속도</span>
                   </div>
-                  <strong className="text-toss-text text-sm sm:text-base font-extrabold block">
+                  <strong className="text-toss-text text-xs sm:text-base font-extrabold block">
                     {weather.wind_speed} m/s
                   </strong>
                 </div>
@@ -473,18 +473,18 @@ export const InteractiveMapTab: React.FC<Props> = ({
       )}
 
       {/* 3. 지도 및 지역 검색 & 활성화된 필터 */}
-      <div className="toss-card p-6 md:p-8 space-y-4">
+      <div className="toss-card p-4 sm:p-6 md:p-8 space-y-3.5 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-extrabold text-toss-text">
+              <h2 className="text-base sm:text-lg font-extrabold text-toss-text">
                 {selectedDistrict} 코스 & 로컬 상점 지도
               </h2>
-              <span className="text-xs font-bold text-toss-blue bg-toss-blueLight px-2 py-0.5 rounded-full">
+              <span className="text-[10px] sm:text-xs font-bold text-toss-blue bg-toss-blueLight px-2 py-0.5 rounded-full">
                 반경 2.0km
               </span>
             </div>
-            <p className="text-xs text-toss-subtext mt-0.5">
+            <p className="text-[11px] sm:text-xs text-toss-subtext mt-0.5">
               아래 버튼을 눌러 하천시설, 공원, MyTag 가맹점을 켜고 끌 수 있습니다.
             </p>
           </div>
@@ -495,7 +495,7 @@ export const InteractiveMapTab: React.FC<Props> = ({
             <select
               value={selectedDistrict}
               onChange={(e) => onSelectDistrict(e.target.value)}
-              className="bg-toss-bg border-none rounded-2xl px-3.5 py-2 text-xs font-extrabold text-toss-text focus:ring-2 focus:ring-toss-blue outline-none"
+              className="bg-toss-bg border-none rounded-2xl px-3.5 py-2 text-xs font-extrabold text-toss-text focus:ring-2 focus:ring-toss-blue outline-none cursor-pointer"
             >
               {availableDistricts.map(d => (
                 <option key={d} value={d}>
@@ -507,17 +507,17 @@ export const InteractiveMapTab: React.FC<Props> = ({
         </div>
 
         {/* 추천 코스 배너 칩 */}
-        <div className="p-3.5 bg-toss-bg rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-toss-border/60">
+        <div className="p-3.5 bg-toss-bg rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border border-toss-border/60">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-toss-greenLight flex items-center justify-center text-toss-green shrink-0">
               <Navigation className="w-4 h-4" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-xs font-black text-toss-text">
                   🏃‍♂️ {currentCourse.name} ({currentCourse.distance})
                 </span>
-                <span className="text-[10px] font-bold text-toss-green bg-toss-greenLight px-2 py-0.5 rounded-full">
+                <span className="text-[9px] sm:text-[10px] font-bold text-toss-green bg-toss-greenLight px-1.5 sm:px-2 py-0.5 rounded-full">
                   {currentCourse.level}
                 </span>
               </div>
@@ -531,11 +531,11 @@ export const InteractiveMapTab: React.FC<Props> = ({
           </span>
         </div>
 
-        {/* 버튼 활성화: 누르면 색이 바뀌어 활성 상태가 직관적으로 보임 */}
-        <div className="flex flex-wrap items-center gap-2 p-1.5 bg-toss-bg rounded-2xl text-xs font-bold">
+        {/* 버튼 활성화: 모바일에서 가로 스크롤 가능하게 처리 */}
+        <div className="flex items-center gap-1.5 p-1.5 bg-toss-bg rounded-2xl text-[11px] sm:text-xs font-bold overflow-x-auto max-w-full">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-3.5 py-2 rounded-xl transition-all ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all shrink-0 ${
               filterType === 'all'
                 ? 'bg-toss-blue text-white shadow-sm font-black'
                 : 'text-toss-subtext hover:text-toss-text'
@@ -545,18 +545,18 @@ export const InteractiveMapTab: React.FC<Props> = ({
           </button>
           <button
             onClick={() => setFilterType('facilities')}
-            className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
               filterType === 'facilities'
                 ? 'bg-toss-blue text-white shadow-sm font-black'
                 : 'text-toss-subtext hover:text-toss-text'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-toss-blueLight"></span>
-            하천·체육시설 ({riverFacilities.length}개)
+            하천·체육 ({riverFacilities.length}개)
           </button>
           <button
             onClick={() => setFilterType('parks')}
-            className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
               filterType === 'parks'
                 ? 'bg-toss-green text-white shadow-sm font-black'
                 : 'text-toss-subtext hover:text-toss-text'
@@ -567,35 +567,35 @@ export const InteractiveMapTab: React.FC<Props> = ({
           </button>
           <button
             onClick={() => setFilterType('shops')}
-            className={`px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
               filterType === 'shops'
                 ? 'bg-toss-red text-white shadow-sm font-black'
                 : 'text-toss-subtext hover:text-toss-text'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-red-200"></span>
-            MyTag 가맹점 ({currentShops.length}개소)
+            가맹점 ({currentShops.length}개소)
           </button>
         </div>
 
         {/* 워터마크 없는 클린 오픈스트리트맵 지도 */}
-        <div className="relative rounded-2xl overflow-hidden border border-toss-border h-[480px]">
+        <div className="relative rounded-2xl overflow-hidden border border-toss-border h-[380px] sm:h-[480px]">
           <div ref={mapContainerRef} className="w-full h-full"></div>
 
-          {/* 지도 위 플로팅 범례 */}
-          <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border border-toss-border text-xs space-y-2 pointer-events-auto">
-            <span className="font-extrabold text-toss-text block text-[11px]">{selectedDistrict} 레이어 안내</span>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-toss-blue"></span>
-              <span className="text-toss-subtext">체육시설·음수대 ({riverFacilities.length}개)</span>
+          {/* 지도 위 플로팅 범례 (모바일에서도 아담하게 표시) */}
+          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-[400] bg-white/95 backdrop-blur-md p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl shadow-lg border border-toss-border text-[10px] sm:text-xs space-y-1 sm:space-y-2 pointer-events-auto max-w-[210px] sm:max-w-none">
+            <span className="font-extrabold text-toss-text block text-[10px] sm:text-[11px]">{selectedDistrict} 레이어 안내</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-toss-blue shrink-0"></span>
+              <span className="text-toss-subtext truncate">체육시설·음수대 ({riverFacilities.length}개)</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-toss-green"></span>
-              <span className="text-toss-subtext">{currentCourse.name} ({currentCourse.distance})</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-toss-green shrink-0"></span>
+              <span className="text-toss-subtext truncate">{currentCourse.name}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-toss-red"></span>
-              <span className="text-toss-subtext">MyTag 골목 할인점 ({currentShops.length}개소)</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-toss-red shrink-0"></span>
+              <span className="text-toss-subtext truncate">MyTag 골목 할인점 ({currentShops.length}개)</span>
             </div>
           </div>
         </div>

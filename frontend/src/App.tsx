@@ -159,34 +159,34 @@ export function App() {
         selectedDistrict={selectedDistrict}
       />
 
-      {/* 토스 플로팅 알림 토스트 (화면 하단 중앙) */}
+      {/* 토스 플로팅 알림 토스트 (화면 하단 중앙 - 모바일 하단바 높이 고려) */}
       {toastMessage && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#191F28] text-white px-5 py-3 rounded-full shadow-2xl font-bold text-xs flex items-center gap-2 animate-in fade-in zoom-in-95">
-          <div className="w-4 h-4 rounded-full bg-toss-blue flex items-center justify-center text-white">
+        <div className="fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#191F28] text-white px-5 py-3 rounded-full shadow-2xl font-bold text-xs flex items-center gap-2 animate-in fade-in zoom-in-95 max-w-[90vw] truncate">
+          <div className="w-4 h-4 rounded-full bg-toss-blue flex items-center justify-center text-white shrink-0">
             <Check className="w-3 h-3 stroke-[3]" />
           </div>
-          <span>{toastMessage}</span>
+          <span className="truncate">{toastMessage}</span>
         </div>
       )}
 
       {/* 에러 알림 배너 */}
       {error && (
-        <div className="bg-red-50 border-b border-red-200 px-6 py-3 text-red-600 text-xs flex items-center justify-between">
+        <div className="bg-red-50 border-b border-red-200 px-4 sm:px-6 py-2.5 sm:py-3 text-red-600 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" />
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
           <button
             onClick={loadAllData}
-            className="underline font-bold"
+            className="underline font-bold shrink-0 ml-2"
           >
             다시 시도
           </button>
         </div>
       )}
 
-      {/* 메인 콘텐츠 영역 */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      {/* 메인 콘텐츠 영역 (모바일 하단바 여백 pb-24 확보) */}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 pb-24 md:pb-8">
         {loading && !districts.length ? (
           <div className="h-96 flex flex-col items-center justify-center space-y-3">
             <div className="w-9 h-9 border-3 border-toss-border border-t-toss-blue rounded-full animate-spin"></div>
