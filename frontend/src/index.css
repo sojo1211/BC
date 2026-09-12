@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F2F4F6;
+    color: #191F28;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.02em;
+    overflow-x: hidden;
+  }
+}
+
+/* 토스 스타일 카드 */
+.toss-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toss-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.08);
+}
+
+.toss-card-interactive:active {
+  transform: scale(0.985);
+}
+
+/* 토스 스타일 버튼 쫀득한 클릭감 */
+.toss-button-primary {
+  background-color: #3182F6;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 18px;
+  transition: all 0.15s ease;
+}
+.toss-button-primary:hover {
+  background-color: #1B64DA;
+}
+.toss-button-primary:active {
+  transform: scale(0.97);
+}
+
+/* 토스 스타일 부드러운 스크롤바 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D6DB;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B0B8C1;
+}
+
+/* Leaflet 지도 토스 라이트 테마 */
+.leaflet-container {
+  font-family: inherit !important;
+  background-color: #EBF1F6 !important;
+  border-radius: 20px !important;
+}
+.leaflet-popup-content-wrapper {
+  background: #FFFFFF !important;
+  color: #191F28 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+  padding: 4px !important;
+}
+.leaflet-popup-tip {
+  background: #FFFFFF !important;
+}
