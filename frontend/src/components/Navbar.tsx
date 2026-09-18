@@ -29,19 +29,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* 토스 스타일 브랜드 로고 */}
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-toss-blue flex items-center justify-center text-white font-black text-base sm:text-lg shadow-sm shrink-0">
-              L
+              R
             </div>
             <div>
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-lg sm:text-xl font-extrabold text-toss-text tracking-tight">
-                  로컬루프
+                  Paybooc RUN:IN
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-toss-blue bg-toss-blueLight px-1.5 sm:px-2 py-0.5 rounded-full">
-                  페이북 로컬
+                  페이북 런인
                 </span>
               </div>
               <p className="text-[11px] text-toss-subtext hidden sm:block">
-                달리고 동네 단골되는 로컬 커뮤니티
+                달리고 동네 안으로(RUN+IN) 들어오는 로컬 커뮤니티
               </p>
             </div>
           </div>

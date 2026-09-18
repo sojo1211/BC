@@ -54,7 +54,7 @@ export const DataScreeningTab: React.FC<Props> = ({
             [상권 분석] 어디를 왜 살려야 하는지, 데이터로 검증하는 페이지입니다
           </strong>
           <p className="text-toss-subtext leading-relaxed text-[11px] sm:text-xs">
-            공모전 필수 데이터(BC카드 242,574건 결제 원천데이터 / 서울 총 {summary?.total_bc_consumption ? (summary.total_bc_consumption / 100000000).toFixed(1) + '억' : '1.96억'}건)와 서울시 유동인구·거주인구를 교차 분석하여,
+            공모전 필수 데이터(BC카드 소비데이터: 서울 기준 약 {summary?.total_bc_consumption ? (summary.total_bc_consumption / 100000000).toFixed(2) : '1.96'}억 건 / 195,942,696건 / 25,792행, 전국 242,574행)와 서울시 유동인구(길단위인구-자치구 및 상권)·거주인구를 교차 분석하여,
             단순히 사람이 많은 곳이 아니라 <strong>'사람은 많은데 소비 흔적이 적은 취약 상권(동작구)'</strong>을 수치 근거로 찾아낸 분석 과정입니다.
           </p>
         </div>
@@ -67,7 +67,7 @@ export const DataScreeningTab: React.FC<Props> = ({
           공모전 핵심 문제 인식 및 데이터 출처
         </div>
         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-toss-text leading-tight tracking-tight">
-          동작구를 선정한 이유
+          동작구를 선정한 이유 & 정성적 연결고리 분석
         </h1>
         
         {/* 명확한 문제인식 박스들 */}
@@ -75,7 +75,14 @@ export const DataScreeningTab: React.FC<Props> = ({
           <div className="p-3.5 sm:p-4 bg-toss-bg rounded-2xl space-y-1 border-l-4 border-toss-blue">
             <span className="font-extrabold text-toss-text text-xs sm:text-sm">사당역 통과 유동인구 이탈 현상</span>
             <p className="text-toss-subtext leading-relaxed text-[11px] sm:text-xs">
-              <strong>서울교통공사 환승 통계에 따르면</strong> 사당역 평일 환승인원이 <strong>160,478명으로 서울시 전체 6위</strong>에 달하는 핵심 경유지이나, <strong>BC카드 소비 데이터 및 행안부 인구 통계에 따르면</strong> 동작구 거주 1인당 소비는 <strong>16.67건으로 서울 25개 구 중 17위(하위권)</strong>에 머물러 있어, 수많은 인구가 상권 소비로 연결되지 않고 스쳐 지나가는 구조적 문제를 인식하였습니다.
+              <strong>서울교통공사 환승 통계에 따르면</strong> 사당역 평일 환승인원이 <strong>160,478명으로 서울시 전체 6위</strong>에 달하는 핵심 경유지이나, <strong>BC카드 소비 데이터(1억 9,594만 건) 및 행안부 인구 통계에 따르면</strong> 동작구 거주 1인당 소비는 <strong>16.67건으로 서울 25개 구 중 17위(하위권)</strong>에 머물러 있어, 수많은 인구가 상권 소비로 연결되지 않고 스쳐 지나가는 구조적 문제를 인식하였습니다.
+            </p>
+          </div>
+
+          <div className="p-3.5 sm:p-4 bg-toss-bg rounded-2xl space-y-1 border-l-4 border-amber-500">
+            <span className="font-extrabold text-toss-text text-xs sm:text-sm">🔍 정성적 분석: 통과형 유동인구가 지갑을 열지 않는 이유</span>
+            <p className="text-toss-subtext leading-relaxed text-[11px] sm:text-xs">
+              <strong>현장 관찰 및 이용자 조사 근거:</strong> 노량진 수험생 및 사당역 환승객은 평균 체류 시간이 짧고(1.5시간 이하), 지출 항목이 고시원비·학원비 등 고정비에 집중되어 있습니다. 운동 후 가볍게 들를 '목적형 체류 동기'가 부족하여 통과형 유동인구가 지역 상권 소비로 이어지지 않는 한계를 규명했습니다.
             </p>
           </div>
 
@@ -88,7 +95,7 @@ export const DataScreeningTab: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* 3. BC카드 기존 서비스와의 협업 및 차별화 전략: 왜 이렇게 설계했는가? (기획안 4-4 기반) */}
+      {/* 3. BC카드 기존 서비스와의 협업 및 차별화 전략: 왜 이렇게 설계했는가? (Paybooc RUN:IN) */}
       <div className="toss-card p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-5 bg-gradient-to-br from-white to-blue-50/40 border border-toss-blue/20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-toss-border">
           <div>
@@ -96,10 +103,10 @@ export const DataScreeningTab: React.FC<Props> = ({
               <span className="text-[10px] sm:text-[11px] font-black text-white bg-toss-blue px-2 py-0.5 rounded-md">
                 BC 인프라 협업 전략
               </span>
-              <span className="text-[11px] sm:text-xs font-extrabold text-toss-blue">MyTag 맞춤 혜택 연계</span>
+              <span className="text-[11px] sm:text-xs font-extrabold text-toss-blue">Paybooc RUN:IN</span>
             </div>
             <h2 className="text-lg sm:text-xl font-extrabold text-toss-text">
-              BC카드 페이북 MyTag와의 협업 및 설계 이유?
+              BC카드 페이북 MyTag 연계 - Paybooc RUN:IN (런인)
             </h2>
           </div>
           <span className="text-[11px] sm:text-xs font-bold text-toss-muted bg-white px-3 py-1 rounded-full border border-toss-border shadow-xs self-start sm:self-center">
@@ -117,17 +124,17 @@ export const DataScreeningTab: React.FC<Props> = ({
             그러나 <strong>기존 MyTag는 결제 시점의 조건만 확인하는 '정적 방식'</strong>이어서, 월 한도 소진 후 재방문 유인이 사라지는 <strong>1회성 사용 한계</strong>가 있었습니다.
           </p>
           <p className="text-toss-subtext leading-relaxed text-[11px] sm:text-xs">
-            따라서 본 서비스는 페이북 앱에 <strong>[취미 커뮤니티(러닝 크루)]라는 신규 태그</strong>를 추가하여,
+            따라서 <strong>Paybooc RUN:IN</strong>은 페이북 앱에 <strong>[취미 커뮤니티(러닝 크루)]라는 신규 태그</strong>를 추가하여,
             단순 결제 조건뿐만 아니라 <strong>'지금 이 사람이 어떤 크루 활동 중인가 + 실시간 위치 동선'</strong>을 결합해 확인합니다.
             러닝 완주 후 인근 골목 가맹점을 방문하도록 유도하고, <strong>10회 스탬프 루프</strong>를 통해 자연스러운 재방문 단골화를 완성합니다.
           </p>
         </div>
 
-        {/* 사용자 요청: [기존 MyTag vs Paybooc Local Community 제안 비교 표] */}
+        {/* 사용자 요청: [기존 MyTag vs Paybooc RUN:IN 제안 비교 표] */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-extrabold text-toss-text block">
-              📊 기존 MyTag와 LOCAL LOOP 제안 모델 비교
+              📊 기존 MyTag와 Paybooc RUN:IN 제안 모델 비교
             </span>
             <span className="text-[10px] text-toss-muted sm:hidden block">👈 좌우 스크롤</span>
           </div>
@@ -137,7 +144,7 @@ export const DataScreeningTab: React.FC<Props> = ({
                 <tr className="bg-slate-50 border-b border-toss-border text-toss-subtext">
                   <th className="p-3.5 font-bold w-1/4">구분</th>
                   <th className="p-3.5 font-bold w-3/8 text-gray-600">기존 MyTag (예: 로컬브랜드 상권 할인)</th>
-                  <th className="p-3.5 font-extrabold w-3/8 text-toss-blue bg-blue-50/50">Paybooc Local Community (제안)</th>
+                  <th className="p-3.5 font-extrabold w-3/8 text-toss-blue bg-blue-50/50">Paybooc RUN:IN (제안)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-toss-border">
@@ -171,6 +178,28 @@ export const DataScreeningTab: React.FC<Props> = ({
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* 공모전 추가 보완 전략 3가지 (소상공인 혜택, 초기 부스팅, BC카드 BM 확장) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
+          <div className="p-3.5 bg-white rounded-2xl border border-toss-border space-y-1">
+            <span className="font-extrabold text-toss-blue block">🏪 소상공인 참여 혜택</span>
+            <p className="text-toss-subtext text-[11px] leading-relaxed">
+              별도 광고비 부담 없이 2030 단체 손님을 확정 유치하며, 로컬 패스 달성 실적에 따라 BC카드 가맹점 수수료 우대 및 마케팅 지원금을 상생 연계합니다.
+            </p>
+          </div>
+          <div className="p-3.5 bg-white rounded-2xl border border-toss-border space-y-1">
+            <span className="font-extrabold text-toss-blue block">🚀 초기 부스팅(Lock-in)</span>
+            <p className="text-toss-subtext text-[11px] leading-relaxed">
+              지역 주요 러닝크루 5개와 사전 제휴 파일럿을 운영하고, 첫 가입 및 러닝 완주 시 3,000원 즉시 할인 웰컴 리워드로 초기 트래픽을 강제 창출합니다.
+            </p>
+          </div>
+          <div className="p-3.5 bg-white rounded-2xl border border-toss-border space-y-1">
+            <span className="font-extrabold text-toss-blue block">💳 BC카드 BM 확장성</span>
+            <p className="text-toss-subtext text-[11px] leading-relaxed">
+              페이북 앱 체류시간 증대 ➔ 금융/마이데이터 락인 효과 ➔ 축적된 결제-동선 데이터 기반 B2B 상권 분석 리포트 서비스로 비즈니스 가치를 확장합니다.
+            </p>
           </div>
         </div>
       </div>
