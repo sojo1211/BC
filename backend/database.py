@@ -1,5 +1,4 @@
 import os
-import pymysql
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from backend.config import settings
@@ -9,6 +8,7 @@ Base = declarative_base()
 def init_engine():
     # 1. 먼저 로컬 MySQL 연결 시도
     try:
+        import pymysql
         # 데이터베이스 존재 여부 확인 및 자동 생성
         conn = pymysql.connect(
             host=settings.MYSQL_HOST,
