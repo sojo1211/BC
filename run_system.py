@@ -4,10 +4,12 @@ import webbrowser
 import subprocess
 import time
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 def main():
     print("=" * 65)
-    print("🚀 [LOCAL LOOP] 풀스택 서비스 통합 런처")
-    print("   BC카드 AI금융빅데이터 공모전: Paybooc Local Community")
+    print("🚀 [Paybooc RUN:IN] 풀스택 서비스 통합 런처")
+    print("   BC카드 AI금융빅데이터 공모전: Paybooc RUN:IN (페이북 런인)")
     print("=" * 65)
 
     # 1. DB 시딩 실행 확인
