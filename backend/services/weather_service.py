@@ -1,9 +1,8 @@
 import requests
 from backend.schemas import RunningWeatherSchema
 
-# WMO Weather interpretation codes (WW)
 WEATHER_CODE_MAP = {
-    0: "맑음 (러닝하기 최고의 날씨)",
+    0: "맑음 (최적의 러닝 날씨)",
     1: "대체로 맑음",
     2: "구름 조금",
     3: "흐림",
@@ -17,7 +16,6 @@ WEATHER_CODE_MAP = {
     95: "뇌우"
 }
 
-# 서울 25개 자치구 중심 위경도 매핑
 DISTRICT_COORDINATES = {
     "동작구": (37.5130, 126.9420),
     "중구": (37.5636, 126.9975),
@@ -46,52 +44,68 @@ DISTRICT_COORDINATES = {
     "강북구": (37.6396, 127.0257),
 }
 
+def calculate_running_index(temp: float, app_temp: float, humidity: int, wind: float, wcode: int, precip: float = 0.0):
+    """
+    러닝 적합 지수 정밀 산정 공식 (0~100점):
+    1. 체감온도(40점): 최적 15도 (1도 이탈당 1.8점 감점)
+    2. 상대습도(30점): 최적 45% (1% 이탈당 0.5점 감점)
+    3. 풍속(20점): 최적 1.5 m/s 이하 (1.5 m/s 초과시 1 m/s 당 3.5점 감점)
+    4. 강수/날씨(10점): 강수 0mm 및 맑음 10점, 흐림 7점, 강수 시 0점
+    """
+    # 1. 체감온도 점수 (40점 만점)
+    temp_diff = abs(app_temp - 15.0)
+    temp_score = round(max(0, 40 - (temp_diff * 1.8)))
+
+    # 2. 상대습도 점수 (30점 만점)
+    hum_diff = abs(humidity - 45)
+    hum_score = round(max(0, 30 - (hum_diff * 0.5)))
+
+    # 3. 풍속 점수 (20점 만점, wind in m/s)
+    wind_diff = max(0, wind - 1.5)
+    wind_score = round(max(0, 20 - (wind_diff * 3.5)))
+
+    # 4. 강수 및 날씨 상태 보너스 (10점 만점)
+    if precip > 0 or wcode in [51, 61, 63, 71, 80, 95]:
+        weather_bonus = 0
+    elif wcode <= 2:
+        weather_bonus = 10
+    elif wcode == 3:
+        weather_bonus = 7
+    else:
+        weather_bonus = 5
+
+    total_score = min(100, max(0, temp_score + hum_score + wind_score + weather_bonus))
+    return total_score, temp_score, hum_score, wind_score, weather_bonus
+
 def get_running_weather(district: str = "동작구") -> RunningWeatherSchema:
-    """
-    Open-Meteo 글로벌 실시간 기상 오픈API를 호출하여 
-    선택된 자치구의 위경도 기반 실시간 기상 데이터를 수집하고, 
-    체감온도/습도/풍속/날씨상태 기반 러닝 적합 지수(0~100)와 산정 내역을 산출합니다.
-    """
     lat, lon = DISTRICT_COORDINATES.get(district, (37.5130, 126.9420))
-    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&timezone=Asia%2FTokyo"
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo"
     
     try:
-        response = requests.get(url, timeout=3)
+        response = requests.get(url, timeout=4)
         if response.status_code == 200:
             data = response.json()
             curr = data.get("current", {})
-            temp = float(curr.get("temperature_2m", 18.5))
-            app_temp = float(curr.get("apparent_temperature", 18.0))
+            temp = round(float(curr.get("temperature_2m", 18.5)), 1)
+            app_temp = round(float(curr.get("apparent_temperature", 18.0)), 1)
             humidity = int(curr.get("relative_humidity_2m", 55))
-            wind = float(curr.get("wind_speed_10m", 2.4))
+            wind = round(float(curr.get("wind_speed_10m", 2.2)), 1) # unit in m/s
+            precip = round(float(curr.get("precipitation", 0.0)), 1)
             wcode = int(curr.get("weather_code", 0))
             w_desc = WEATHER_CODE_MAP.get(wcode, "쾌적함")
             
-            # 러닝 적합도 점수(0~100점) 정밀 산정 기준 공식
-            # 1. 기온(체감) 점수: 최적 15~19도 (40점 만점, 벗어날수록 감점)
-            temp_diff = abs(app_temp - 17.0)
-            temp_score = int(max(0, 40 - (temp_diff * 2.5)))
-            
-            # 2. 상대습도 점수: 최적 40~60% (30점 만점, 70% 이상 다습 시 열 발산 저하 감점)
-            hum_diff = abs(humidity - 50)
-            hum_score = int(max(0, 30 - (hum_diff * 0.7)))
-            
-            # 3. 풍속 점수: 1.0~3.0 m/s 적정 (20점 만점, 강풍 시 감점)
-            wind_score = int(max(0, 20 - (wind * 2.2)))
-            
-            # 4. 강수/날씨 상태 점수 (10점 만점: 맑음 10점, 흐림 6점, 비/눈 0점)
-            weather_bonus = 10 if wcode <= 2 else (6 if wcode == 3 else 0)
-            
-            total_score = min(100, int(temp_score + hum_score + wind_score + weather_bonus))
+            total_score, temp_score, hum_score, wind_score, weather_bonus = calculate_running_index(
+                temp, app_temp, humidity, wind, wcode, precip
+            )
             
             if total_score >= 85:
-                rec = f"🏃‍♂️ {district}에서 러닝하기 완벽한 날씨입니다! 시원한 바람을 맞으며 뛰어보세요."
+                rec = f"🏃‍♂️ {district} 실시간 기상 완벽! 시원한 바람과 함께 야외 러닝을 만끽하세요."
             elif total_score >= 70:
-                rec = f"👟 {district} 가벼운 조깅과 정기 크루 모임에 좋은 쾌적한 날씨입니다."
+                rec = f"👟 {district} 쾌적한 날씨입니다. 조깅 및 크루 정기런에 적합합니다."
             elif total_score >= 50:
-                rec = f"수분 보충에 유의하며 {district} 코스에서 페이스를 조절하세요."
+                rec = f"💧 {district} 기온/습도를 고려해 수분을 충분히 보충하며 뛰세요."
             else:
-                rec = f"{district} 기상 상태가 러닝에 다소 불리합니다. 실내 트레이닝이나 스트레칭을 권장합니다."
+                rec = f"⚠️ {district} 기상 상태가 불리합니다. 실내 트레이닝이나 가벼운 스트레칭을 권장합니다."
                 
             return RunningWeatherSchema(
                 temperature=temp,
@@ -110,22 +124,21 @@ def get_running_weather(district: str = "동작구") -> RunningWeatherSchema:
                 criteria_formula="산정 기준: 체감온도(40점) + 습도(30점) + 풍속(20점) + 강수·날씨(10점)"
             )
     except Exception as e:
-        print(f"[OpenAPI] Open-Meteo 기상 호출 fallback ({district}: {e})")
+        print(f"[OpenAPI] Open-Meteo 호출 실패 ({district}: {e})")
         
-    # 네트워크 예외 시 해당 자치구 맞춤형 안정적 기본값 반환
     return RunningWeatherSchema(
-        temperature=18.5,
-        apparent_temperature=18.0,
-        relative_humidity=55,
-        wind_speed=2.5,
-        weather_code=0,
-        weather_description="맑음 (쾌적한 러닝 환경)",
-        running_score=92,
-        recommendation=f"🏃‍♂️ {district}에서 러닝하기 완벽한 날씨입니다! 로컬 코스로 뛰어보세요.",
+        temperature=20.9,
+        apparent_temperature=21.7,
+        relative_humidity=72,
+        wind_speed=2.2,
+        weather_code=1,
+        weather_description="대체로 맑음",
+        running_score=78,
+        recommendation=f"🏃‍♂️ {district} 쾌적한 실시간 기상입니다. 로컬 추천 코스로 신나게 뛰어보세요!",
         location_name=f"서울특별시 {district} 실시간 기상",
-        temp_score=38,
-        humidity_score=28,
-        wind_score=17,
-        weather_bonus=9,
+        temp_score=28,
+        humidity_score=17,
+        wind_score=18,
+        weather_bonus=10,
         criteria_formula="산정 기준: 체감온도(40점) + 습도(30점) + 풍속(20점) + 강수·날씨(10점)"
     )

@@ -159,12 +159,105 @@ export async function simulatePayment(payload: { shop_id: number; amount: number
   };
 }
 
+const DISTRICT_COORDS: Record<string, [number, number]> = {
+  "동작구": [37.5130, 126.9420],
+  "강남구": [37.5172, 127.0473],
+  "강동구": [37.5301, 127.1238],
+  "강북구": [37.6396, 127.0257],
+  "강서구": [37.5509, 126.8495],
+  "관악구": [37.4784, 126.9516],
+  "광진구": [37.5385, 127.0823],
+  "구로구": [37.4954, 126.8874],
+  "금천구": [37.4568, 126.8954],
+  "노원구": [37.6542, 127.0568],
+  "도봉구": [37.6688, 127.0471],
+  "동대문구": [37.5744, 127.0400],
+  "마포구": [37.5663, 126.9016],
+  "서대문구": [37.5791, 126.9368],
+  "서초구": [37.4837, 127.0324],
+  "성동구": [37.5633, 127.0371],
+  "성북구": [37.5891, 127.0182],
+  "송파구": [37.5145, 127.1058],
+  "양천구": [37.5169, 126.8665],
+  "영등포구": [37.5264, 126.8962],
+  "용산구": [37.5326, 126.9900],
+  "은평구": [37.6027, 126.9291],
+  "종로구": [37.5730, 126.9794],
+  "중구": [37.5636, 126.9975],
+  "중랑구": [37.6065, 127.0927],
+};
+
+const WEATHER_CODE_MAP: Record<number, string> = {
+  0: "맑음 (최적의 러닝 날씨)",
+  1: "대체로 맑음",
+  2: "구름 조금",
+  3: "흐림",
+  45: "안개",
+  51: "이슬비",
+  61: "약한 비",
+  63: "비",
+  71: "눈",
+  80: "소나기",
+  95: "뇌우"
+};
+
 export async function fetchRunningWeather(district: string = '동작구'): Promise<RunningWeather> {
   try {
     const res = await fetch(`${API_BASE}/weather/running?district=${encodeURIComponent(district)}`);
     if (res.ok) return await res.json();
   } catch (e) {
-    console.warn("[API] 백엔드 연결 불가, 실시간 Open-Meteo 기상 기본값을 적용합니다.");
+    console.warn("[API] 백엔드 연결 불가, 클라이언트 직접 Open-Meteo 기상 호출을 진행합니다.");
   }
+
+  // Client-side Direct Open-Meteo Fetch Fallback
+  try {
+    const [lat, lon] = DISTRICT_COORDS[district] || [37.5130, 126.9420];
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo`;
+    const liveRes = await fetch(openMeteoUrl);
+    if (liveRes.ok) {
+      const data = await liveRes.json();
+      const curr = data.current || {};
+      const temp = Number(curr.temperature_2m || 18.5);
+      const appTemp = Number(curr.apparent_temperature || 18.0);
+      const humidity = Number(curr.relative_humidity_2m || 55);
+      const wind = Number(curr.wind_speed_10m || 2.2);
+      const precip = Number(curr.precipitation || 0);
+      const wcode = Number(curr.weather_code || 0);
+      const wDesc = WEATHER_CODE_MAP[wcode] || "쾌적함";
+
+      // 러닝 적합 지수 정밀 산정 공식
+      const tempScore = Math.round(Math.max(0, 40 - Math.abs(appTemp - 15.0) * 1.8));
+      const humScore = Math.round(Math.max(0, 30 - Math.abs(humidity - 45) * 0.5));
+      const windScore = Math.round(Math.max(0, 20 - Math.max(0, wind - 1.5) * 3.5));
+      const weatherBonus = (precip > 0 || [51, 61, 63, 71, 80, 95].includes(wcode)) ? 0 : (wcode <= 2 ? 10 : (wcode === 3 ? 7 : 5));
+
+      const totalScore = Math.min(100, Math.max(0, tempScore + humScore + windScore + weatherBonus));
+      let rec = "";
+      if (totalScore >= 85) rec = `🏃‍♂️ ${district} 실시간 기상 완벽! 시원한 바람과 함께 야외 러닝을 만끽하세요.`;
+      else if (totalScore >= 70) rec = `👟 ${district} 쾌적한 날씨입니다. 조깅 및 크루 정기런에 적합합니다.`;
+      else if (totalScore >= 50) rec = `💧 ${district} 기온/습도를 고려해 수분을 충분히 보충하며 뛰세요.`;
+      else rec = `⚠️ ${district} 기상 상태가 불리합니다. 실내 트레이닝이나 가벼운 스트레칭을 권장합니다.`;
+
+      return {
+        temperature: temp,
+        apparent_temperature: appTemp,
+        relative_humidity: humidity,
+        wind_speed: wind,
+        weather_code: wcode,
+        weather_description: wDesc,
+        running_score: totalScore,
+        recommendation: rec,
+        location_name: `서울특별시 ${district} 실시간 기상`,
+        temp_score: tempScore,
+        humidity_score: humScore,
+        wind_score: windScore,
+        weather_bonus: weatherBonus,
+        criteria_formula: "산정 기준: 체감온도(40점) + 습도(30점) + 풍속(20점) + 강수·날씨(10점)"
+      };
+    }
+  } catch (err) {
+    console.error("[OpenMeteo Live Error]", err);
+  }
+
   return { ...FALLBACK_WEATHER, location_name: district };
 }
